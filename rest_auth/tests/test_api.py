@@ -398,3 +398,15 @@ class APITestCase1(TestCase, BaseAPITestCase):
 
         self.post(self.login_url, data=payload, status_code=status.HTTP_200_OK)
         self.get(self.logout_url, status_code=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @override_settings(REST_AUTH_CREATE_TOKEN_ON_REGISTER=False)
+    def test_registration_without_creating_token(self):
+        REGISTRATION_DATA = dict(self.REGISTRATION_DATA)
+        REGISTRATION_DATA['username'] = 'notokenuser1'
+
+        self.post(self.register_url, data=REGISTRATION_DATA, status_code=201)
+        user = get_user_model().objects.get_by_natural_key(REGISTRATION_DATA['username'])
+
+        from rest_auth.models import TokenModel
+        with self.assertRaises(TokenModel.DoesNotExist):
+            user.auth_token

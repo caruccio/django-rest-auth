@@ -40,6 +40,8 @@ Configuration
 
 - **REST_AUTH_TOKEN_CREATOR** - callable to create tokens, default value ``rest_auth.utils.default_create_token``.
 
+- **REST_AUTH_CREATE_TOKEN_ON_REGISTER** - wether to create or not an auth token on registration, default value ``True``.
+
 - **REST_SESSION_LOGIN** - Enable session login in Login API view (default: True)
 
 - **OLD_PASSWORD_FIELD_ENABLED** - set it to True if you want to have old password verification on password change enpoint (default: False)

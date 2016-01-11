@@ -15,7 +15,7 @@ from rest_auth.registration.serializers import (SocialLoginSerializer,
                                                 VerifyEmailSerializer)
 from rest_auth.views import LoginView
 from rest_auth.models import TokenModel
-from .app_settings import RegisterSerializer
+from .app_settings import CREATE_TOKEN_ON_REGISTER, RegisterSerializer
 
 
 class RegisterView(CreateAPIView):
@@ -28,13 +28,22 @@ class RegisterView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(TokenSerializer(user.auth_token).data,
-                        status=status.HTTP_201_CREATED,
-                        headers=headers)
+
+        if CREATE_TOKEN_ON_REGISTER:
+            return Response(TokenSerializer(user.auth_token).data,
+                            status=status.HTTP_201_CREATED,
+                            headers=headers)
+        else:
+            return Response(status=status.HTTP_201_CREATED,
+                            headers=headers)
+
 
     def perform_create(self, serializer):
         user = serializer.save(self.request)
-        create_token(self.token_model, user, serializer)
+
+        if CREATE_TOKEN_ON_REGISTER:
+            create_token(self.token_model, user, serializer)
+
         complete_signup(self.request._request, user,
                         allauth_settings.EMAIL_VERIFICATION,
                         None)

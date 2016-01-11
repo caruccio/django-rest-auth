@@ -9,3 +9,5 @@ serializers = getattr(settings, 'REST_AUTH_REGISTER_SERIALIZERS', {})
 
 RegisterSerializer = import_callable(
     serializers.get('REGISTER_SERIALIZER', DefaultRegisterSerializer))
+
+CREATE_TOKEN_ON_REGISTER = getattr(settings, 'REST_AUTH_CREATE_TOKEN_ON_REGISTER', True)
