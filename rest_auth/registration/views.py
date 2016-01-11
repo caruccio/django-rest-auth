@@ -34,7 +34,8 @@ class RegisterView(CreateAPIView):
                             status=status.HTTP_201_CREATED,
                             headers=headers)
         else:
-            return Response(status=status.HTTP_201_CREATED,
+            return Response({'message':'ok'},
+                            status=status.HTTP_201_CREATED,
                             headers=headers)
 
 
